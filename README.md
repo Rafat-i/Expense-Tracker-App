@@ -24,17 +24,17 @@ This project was developed as part of the **iOS App Development 1** course at La
 ### Authentication
 | Login Screen | Register Screen |
 |--------------|-----------------|
-| ![Login](Screenshots/login.png) | ![Register](Screenshots/register.png) |
+| ![Login](Expense Tracker App/Screenshots/login.png) | ![Register](Expense Tracker App/Screenshots/register.png) |
 
 ### Main Features
 | Dashboard | Add Transaction | Transaction List |
 |-----------|----------------|------------------|
-| ![Dashboard](Screenshots/dashboard.png) | ![Add](Screenshots/add-transaction.png) | ![List](Screenshots/transaction-list.png) |
+| ![Dashboard](Expense Tracker App/Screenshots/dashboard.png) | ![Add](Expense Tracker App/Screenshots/add-transaction.png) | ![List](Expense Tracker App/Screenshots/transaction-list.png) |
 
 ### Transaction Management
 | Edit Transaction | Delete Transaction |
 |-----------------|-------------------|
-| ![Edit](Screenshots/edit-transaction.png) | ![Delete](Screenshots/delete-swipe.png) |
+| ![Edit](Expense Tracker App/Screenshots/edit-transaction.png) | ![Delete](Expense Tracker App/Screenshots/delete-swipe.png) |
 
 ## Technologies Used
 
