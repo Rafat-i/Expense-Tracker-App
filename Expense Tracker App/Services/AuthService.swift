@@ -114,6 +114,24 @@ class AuthService: ObservableObject {
         }
     }
     
+    func updateUsername(username: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return completion(.success(()))
+        }
+
+        db.collection("users").document(uid).updateData([
+            "username": username
+        ]) { error in
+            if let error = error {
+                return completion(.failure(error))
+            } else {
+                self.fetchCurrentUser { _ in
+                    completion(.success(()))
+                }
+            }
+        }
+    }
+    
     func signOut() -> Result<Void, Error> {
         do {
             try Auth.auth().signOut()

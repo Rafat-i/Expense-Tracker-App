@@ -5,6 +5,7 @@
 //  Created by Rafat on 2025-10-31.
 //
 
+
 import SwiftUI
 
 struct DashboardView: View {
@@ -14,12 +15,36 @@ struct DashboardView: View {
     
     @State private var isLoaded = false
     @State private var errorMessage: String?
+    @State private var selectedCategory = "All"
+    
+    var categories: [String] {
+        var set: [String] = ["All"]
+        for t in transactionService.transactions {
+            if !set.contains(t.category) {
+                set.append(t.category)
+            }
+        }
+        return set
+    }
+    
+    var filteredTransactions: [Transaction] {
+        if selectedCategory == "All" {
+            return transactionService.transactions
+        }
+        var list: [Transaction] = []
+        for t in transactionService.transactions {
+            if t.category == selectedCategory {
+                list.append(t)
+            }
+        }
+        return list
+    }
     
     var totalIncome: Double {
         var total = 0.0
-        for transaction in transactionService.transactions {
-            if transaction.type == "INCOME" {
-                total += transaction.amount
+        for t in transactionService.transactions {
+            if t.type == "INCOME" {
+                total += t.amount
             }
         }
         return total
@@ -27,9 +52,9 @@ struct DashboardView: View {
 
     var totalExpense: Double {
         var total = 0.0
-        for transaction in transactionService.transactions {
-            if transaction.type == "EXPENSE" {
-                total += transaction.amount
+        for t in transactionService.transactions {
+            if t.type == "EXPENSE" {
+                total += t.amount
             }
         }
         return total
@@ -40,161 +65,206 @@ struct DashboardView: View {
     }
     
     var body: some View {
-        NavigationView {
-            Group {
-                if !isLoaded {
-                    ProgressView()
-                        .onAppear {
-                            loadData()
-                        }
-                } else {
-                    VStack(spacing: 20) {
-                        
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Welcome,")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text(auth.currentUser?.username ?? "User")
-                                    .font(.title)
-                                    .fontWeight(.semibold)
-                                    .fontDesign(.rounded)
-                            }
+        Group {
+            if !isLoaded {
+                ProgressView().onAppear { loadData() }
+            } else {
+                ZStack(alignment: .bottomTrailing) {
+                    
+                    List {
+                        VStack(spacing: 20) {
                             
-                            Spacer()
-                            
-                            Image(systemName: "person.crop.circle.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 48, height: 48)
-                                .foregroundStyle(.blue.gradient)
-                                .shadow(radius: 3)
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 12)
-                        
-                        VStack(spacing: 15) {
-                            Text("Total Balance")
-                                .font(.headline)
-                                .foregroundColor(.gray)
-                            
-                            Text("$\(balance, specifier: "%.2f")")
-                                .font(.system(size: 40, weight: .bold))
-                                .foregroundColor(balance >= 0 ? .green : .red)
-                            
-                            HStack(spacing: 40) {
-                                VStack {
-                                    Text("Income")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                    Text("$\(totalIncome, specifier: "%.2f")")
-                                        .font(.headline)
-                                        .foregroundColor(.green)
-                                }
-                                
-                                VStack {
-                                    Text("Expenses")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                    Text("$\(totalExpense, specifier: "%.2f")")
-                                        .font(.headline)
-                                        .foregroundColor(.red)
-                                }
-                            }
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(15)
-                        .padding(.horizontal)
-                        
-                        Spacer()
-                        
-                        VStack(spacing: 15) {
-                            NavigationLink(destination: AddTransactionView()) {
-                                HStack {
-                                    Image(systemName: "plus.circle.fill")
-                                    Text("Add Transaction")
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                            }
-                            
-                            NavigationLink(destination: TransactionListView()) {
-                                HStack {
-                                    Image(systemName: "list.bullet")
-                                    Text("View Transactions")
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.green)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                            }
-                            
-                            NavigationLink(destination: SummaryView()) {
-                                HStack {
-                                    Image(systemName: "chart.bar.fill")
-                                    Text("View Summary")
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.orange)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                            }
-                        }
-                        .padding(.horizontal)
-                        
-                        Spacer()
-                        
-                        Button(role: .destructive, action: {
-                            let result = auth.signOut()
-                            if case .failure(let err) = result {
-                                errorMessage = err.localizedDescription
-                            }
-                        }) {
                             HStack {
-                                Image(systemName: "rectangle.portrait.and.arrow.right")
-                                Text("Logout")
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Welcome,")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                    Text(auth.currentUser?.username ?? "User")
+                                        .font(.title)
+                                        .fontWeight(.semibold)
+                                        .fontDesign(.rounded)
+                                }
+                                Spacer()
+                                Image(systemName: "person.crop.circle.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 48, height: 48)
+                                    .foregroundStyle(.blue.gradient)
+                                    .shadow(radius: 3)
                             }
+                            .padding(.top, 8)
+                            
+                            VStack(spacing: 12) {
+                                Text("Total Balance")
+                                    .font(.headline)
+                                    .foregroundColor(.gray)
+                                
+                                Text("$\(balance, specifier: "%.2f")")
+                                    .font(.system(size: 32, weight: .bold))
+                                    .foregroundColor(balance >= 0 ? .green : .red)
+                                
+                                HStack(spacing: 30) {
+                                    VStack(spacing: 2) {
+                                        Text("Income")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text("$\(totalIncome, specifier: "%.2f")")
+                                            .font(.subheadline)
+                                            .foregroundColor(.green)
+                                    }
+                                    
+                                    VStack(spacing: 2) {
+                                        Text("Expenses")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                        Text("$\(totalExpense, specifier: "%.2f")")
+                                            .font(.subheadline)
+                                            .foregroundColor(.red)
+                                    }
+                                }
+                            }
+                            .padding(.vertical, 18)
                             .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                            .background(Color.white)
+                            .cornerRadius(18)
+                            .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 4)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 10) {
+                                    ForEach(categories, id: \.self) { cat in
+                                        Text(cat)
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 8)
+                                            .background(selectedCategory == cat ? Color.blue : Color.gray.opacity(0.2))
+                                            .foregroundColor(selectedCategory == cat ? .white : .black)
+                                            .cornerRadius(20)
+                                            .onTapGesture { selectedCategory = cat }
+                                    }
+                                }
+                            }
+                            
+                            if filteredTransactions.isEmpty {
+                                VStack(spacing: 10) {
+                                    Image(systemName: "tray")
+                                        .font(.system(size: 60))
+                                        .foregroundColor(.gray)
+                                    Text("No transactions")
+                                        .font(.title2)
+                                        .foregroundColor(.gray)
+                                }
+                                .padding(.top, 10)
+                            }
                         }
-                        .padding(.horizontal)
-                        .padding(.bottom)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                         
-                        if let errorMessage = errorMessage {
-                            Text(errorMessage)
+                        if !filteredTransactions.isEmpty {
+                            ForEach(filteredTransactions) { t in
+                                NavigationLink(destination: UpdateTransactionView(transaction: t)) {
+                                    TransactionRow(transaction: t)
+                                        .background(Color.white)
+                                        .cornerRadius(12)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
+                            }
+                            .onDelete(perform: deleteAtOffsets)
+                        }
+                        
+                        if let msg = errorMessage {
+                            Text(msg)
                                 .foregroundStyle(.red)
                                 .multilineTextAlignment(.center)
-                                .padding(.horizontal)
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
                         }
+                    }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    
+                    NavigationLink(destination: AddTransactionView()) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(.white)
+                            .frame(width: 58, height: 58)
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.25), radius: 5, x: 0, y: 3)
+                            .padding()
                     }
                 }
             }
-            .navigationTitle("Dashboard")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     func loadData() {
-        transactionService.fetchTransactions { result in
-            switch result {
-            case .success:
-                isLoaded = true
-                errorMessage = nil
-            case .failure(let error):
-                isLoaded = true
-                errorMessage = error.localizedDescription
+        transactionService.fetchTransactions { r in
+            switch r {
+            case .success: isLoaded = true; errorMessage = nil
+            case .failure(let e): isLoaded = true; errorMessage = e.localizedDescription
             }
+        }
+    }
+    
+    func deleteAtOffsets(at offsets: IndexSet) {
+        for index in offsets {
+            let t = filteredTransactions[index]
+            if let id = t.id {
+                transactionService.deleteTransaction(transactionId: id) { r in
+                    switch r {
+                    case .success:
+                        errorMessage = nil
+                        loadData()
+                    case .failure(let e):
+                        errorMessage = e.localizedDescription
+                    }
+                }
+            } else {
+                errorMessage = "Cannot delete transaction"
+            }
+        }
+    }
+    
+    struct TransactionRow: View {
+        let transaction: Transaction
+        
+        var body: some View {
+            HStack {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(transaction.category)
+                        .font(.headline)
+                    
+                    Text(transaction.note.isEmpty ? "No note" : transaction.note)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    
+                    Text(formattedDate(transaction.date))
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing) {
+                    Text(transaction.type)
+                        .font(.caption)
+                        .foregroundColor(transaction.type == "INCOME" ? .green : .red)
+                    
+                    Text("$\(transaction.amount, specifier: "%.2f")")
+                        .font(.headline)
+                        .foregroundColor(transaction.type == "INCOME" ? .green : .red)
+                }
+            }
+            .padding(.vertical, 5)
+            .padding(.horizontal, 12)
+        }
+        
+        func formattedDate(_ date: Date) -> String {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+            return formatter.string(from: date)
         }
     }
 }
@@ -202,4 +272,3 @@ struct DashboardView: View {
 #Preview {
     DashboardView()
 }
-
