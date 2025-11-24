@@ -5,7 +5,6 @@
 //  Created by Rafat on 2025-10-31.
 //
 
-
 import SwiftUI
 
 struct DashboardView: View {
@@ -92,6 +91,7 @@ struct DashboardView: View {
                                     .foregroundStyle(.blue.gradient)
                                     .shadow(radius: 3)
                             }
+                            .padding(.horizontal)
                             .padding(.top, 8)
                             
                             VStack(spacing: 12) {
@@ -128,6 +128,8 @@ struct DashboardView: View {
                             .background(Color.white)
                             .cornerRadius(18)
                             .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 4)
+                            .padding(.horizontal)
+                            .padding(.horizontal)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 10) {
@@ -141,6 +143,7 @@ struct DashboardView: View {
                                             .onTapGesture { selectedCategory = cat }
                                     }
                                 }
+                                .padding(.horizontal)
                             }
                             
                             if filteredTransactions.isEmpty {
@@ -157,6 +160,7 @@ struct DashboardView: View {
                         }
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
                         
                         if !filteredTransactions.isEmpty {
                             ForEach(filteredTransactions) { t in

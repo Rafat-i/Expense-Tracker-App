@@ -41,9 +41,7 @@ class TransactionService: ObservableObject {
                     return completion(.failure(error))
                 }
                 
-                DispatchQueue.main.async {
-                    self.transactions.append(transaction)
-                }
+                self.fetchTransactions { _ in }
                 
                 completion(.success(transaction))
             }

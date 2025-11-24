@@ -10,14 +10,16 @@ This project was developed as part of the **iOS App Development 1** course at La
 ## Features
 
 - **Secure Authentication** - User registration and login with Firebase Authentication
-- **Add Transactions** - Record income and expenses with custom categories
-- **View Transactions** - Browse all transactions in an organized list
+- **Dashboard with Balance Overview** - Real-time balance calculated from all transactions with income and expense totals
+- **Add Transactions** - Record income and expenses with custom categories and notes
 - **Edit Transactions** - Update transaction details with ease
-- **Delete Transactions** - Swipe to remove unwanted entries
-- **Real-Time Balance** - Dashboard displays current balance calculated from all transactions
-- **Income & Expense Tracking** - Separate totals for income and expenses
-- **Pull to Refresh** - Update transaction data instantly
-- **Dynamic Categories** - Different categories for income (Salary, Investments) and expenses (Rent, Food, Bills, etc.)
+- **Swipe to Delete** - Quickly remove unwanted transactions with a swipe gesture
+- **Category Filtering** - Filter transactions by category directly on the dashboard
+- **Summary Analytics** - View detailed breakdowns of expenses and income by category with percentages
+- **Time Period Filters** - Analyze spending by All Time, This Month, Last Month, or This Year
+- **User Profile** - Manage account settings and logout functionality
+- **Bottom Navigation** - Easy access to Dashboard, Summary, and Profile screens
+- **Dynamic Categories** - Different categories for income (Salary, Return of Investments) and expenses (Rent, Transport, Food, Entertainment, Shopping, Bills)
 
 ## Screenshots
 
@@ -27,20 +29,19 @@ This project was developed as part of the **iOS App Development 1** course at La
 | ![Login](Expense%20Tracker%20App/Screenshots/login.png) | ![Register](Expense%20Tracker%20App/Screenshots/register.png) |
 
 ### Main Features
-| Dashboard | Add Transaction | Transaction List |
+| Dashboard | Add Transaction | Summary Analytics |
 |-----------|----------------|------------------|
-| ![Dashboard](Expense%20Tracker%20App/Screenshots/dashboard.png) | ![Add](Expense%20Tracker%20App/Screenshots/add-transaction.png) | ![List](Expense%20Tracker%20App/Screenshots/transaction-list.png) |
+| ![Dashboard](Expense%20Tracker%20App/Screenshots/dashboard.png) | ![Add](Expense%20Tracker%20App/Screenshots/add-transaction.png) | ![Summary](Expense%20Tracker%20App/Screenshots/summary.png) |
 
 ### Transaction Management
-| Edit Transaction | Delete Transaction |
-|-----------------|-------------------|
-| ![Edit](Expense%20Tracker%20App/Screenshots/edit-transaction.png) | ![Delete](Expense%20Tracker%20App/Screenshots/delete-swipe.png) |
+| Edit Transaction | Delete Transaction | User Profile |
+|-----------------|-------------------|--------------|
+| ![Edit](Expense%20Tracker%20App/Screenshots/edit-transaction.png) | ![Delete](Expense%20Tracker%20App/Screenshots/delete-swipe.png) | ![Profile](Expense%20Tracker%20App/Screenshots/profile.png) |
 
 ## Technologies Used
 
 - **Language:** Swift
 - **Framework:** SwiftUI
-- **Architecture:** MVVM (Model-View-ViewModel)
 - **Backend:** Firebase
   - Firebase Authentication
   - Firebase Firestore
@@ -89,26 +90,39 @@ open "Expense Tracker App.xcodeproj"
 
 1. **Create an Account**
    - Open the app
-   - Tap "Sign Up"
+   - Tap "Sign Up" tab
    - Enter email, password, and username
    - Tap "Sign Up" to create your account
 
 2. **Add a Transaction**
    - Login to your account
-   - Tap "Add Transaction" on the dashboard
+   - Tap the blue "+" button on the dashboard
    - Enter amount, select type (Income/Expense)
    - Choose a category
+   - Select a date
    - Add an optional note
    - Tap "Save Transaction"
 
 3. **View Your Balance**
    - Dashboard displays your current balance
    - See total income and expenses at a glance
+   - Filter by category using the horizontal scroll menu
 
 4. **Manage Transactions**
-   - Tap "View Transactions" to see all entries
    - Tap a transaction to edit it
    - Swipe left to delete a transaction
+   - Changes sync automatically with Firebase
+
+5. **View Summary Analytics**
+   - Tap "Summary" in the bottom navigation
+   - Select time period (All Time, This Month, Last Month, This Year)
+   - View expenses and income breakdown by category
+   - See percentage distributions and average transaction amounts
+
+6. **Manage Profile**
+   - Tap "Profile" in the bottom navigation
+   - View your account information
+   - Tap "Logout" to sign out
 
 ## Team Contributions
 
@@ -118,9 +132,12 @@ This project was developed by:
   - Firebase setup and integration
   - Authentication system (login/register)
   - Transaction CRUD operations
-  - Dashboard with real-time data
+  - Dashboard with real-time data and category filtering
+  - Summary view with analytics
+  - Profile view with logout
+  - Bottom navigation implementation
   - UI/UX design and implementation
-  - UML diagrams (Flowchart, Class, Activity, ER)
+  - Swipe-to-delete functionality
 
 ## Project Structure
 ```
@@ -135,36 +152,35 @@ Expense Tracker App/
 │   ├── AuthGate.swift                 # Login/Register toggle
 │   ├── LoginView.swift                # Login screen
 │   ├── RegisterView.swift             # Registration screen
-│   ├── DashboardView.swift            # Main dashboard
+│   ├── DashboardView.swift            # Main dashboard with transaction list
 │   ├── AddTransactionView.swift       # Add transaction form
-│   ├── TransactionListView.swift      # Transaction list
 │   ├── UpdateTransactionView.swift    # Edit transaction form
-│   └── SummaryView.swift              # Summary statistics
-├── Validators.swift                   # Input validation utilities
-└── ContentView.swift                  # Root view with auth check
+│   ├── SummaryView.swift              # Analytics and summary statistics
+│   └── ProfileView.swift              # User profile and logout
+├── Validators.swift                   # Input validation and SimpleError struct
+└── ContentView.swift                  # Root view with tab navigation
 ```
-
-## Known Issues
-
-- Index requirement for Firebase queries when sorting by date (resolved by sorting in-app)
-- No offline mode - requires internet connection
-- Summary view is currently a placeholder (planned for future release)
 
 ## What I Learned
 
 Through this project, I gained experience in:
 - Building iOS apps with SwiftUI
-- Implementing MVVM architecture pattern
 - Integrating Firebase for backend services
-- Working with Firestore for real-time data
+- Working with Firestore for real-time data synchronization
 - Handling user authentication and data security
+- Implementing swipe gestures and List interactions
+- Creating data visualizations and analytics
+- Managing navigation with custom tab bars
 
 ## Future Enhancements
 
-- Summary view with charts and graphs
-- Category-based filtering
-- Budget & investment goals
+- Budget tracking and alerts
+- Export transactions to CSV
+- Dark mode support
+- Recurring transactions
+- Multi-currency support
+- Offline mode with local caching
 
 ## License
 
-This project was created for educational purposes as part of the iOS App Development 1 course at LaSalle College.
+This project was created for educational purposes as part of the iOS App Development 1 course.

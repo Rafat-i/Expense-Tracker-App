@@ -11,6 +11,7 @@ struct ProfileView: View {
     @ObservedObject private var auth = AuthService.shared
     @State private var newUsername = ""
     @State private var errorText: String?
+    @State private var successMessage: String?
 
     var body: some View {
         Form {
@@ -26,6 +27,7 @@ struct ProfileView: View {
                     let trimmed = newUsername.trimmingCharacters(in: .whitespaces)
                     guard !trimmed.isEmpty else {
                         errorText = "Username cannot be empty"
+                        successMessage = nil
                         return
                     }
 
@@ -34,8 +36,14 @@ struct ProfileView: View {
                         case .success:
                             newUsername = ""
                             errorText = nil
+                            successMessage = "Username updated successfully!"
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                successMessage = nil
+                            }
                         case .failure(let err):
                             errorText = err.localizedDescription
+                            successMessage = nil
                         }
                     }
                 }
@@ -45,6 +53,11 @@ struct ProfileView: View {
                 Text(errorText)
                     .foregroundColor(.red)
             }
+            
+            if let successMessage {
+                Text(successMessage)
+                    .foregroundColor(.green)
+            }
 
             Button(role: .destructive) {
                 let result = auth.signOut()
@@ -52,6 +65,7 @@ struct ProfileView: View {
                     errorText = err.localizedDescription
                 } else {
                     errorText = nil
+                    successMessage = nil
                 }
             } label: {
                 Text("Log Out")
