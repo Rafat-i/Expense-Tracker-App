@@ -5,7 +5,7 @@
 
 The **Expense Tracker App** is a native iOS application built with SwiftUI that helps users manage their personal finances efficiently. Users can securely create accounts, log transactions, and monitor their spending habits with real-time data synchronization through Firebase.
 
-This project was developed as part of the **iOS App Development 1** course at LaSalle College, demonstrating proficiency in SwiftUI, Firebase integration, MVVM architecture, and mobile app development best practices.
+This project was developed to demonstrate proficiency in SwiftUI, Firebase integration and mobile app development best practices.
 
 ## Features
 
